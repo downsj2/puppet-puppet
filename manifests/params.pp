@@ -357,19 +357,26 @@ class puppet::params {
         $unavailable_runmodes = ['systemd.timer']
       }
     }
-    'Redhat' : {
-      # PSBM is a CentOS 6 based distribution
-      # it reports its $osreleasemajor as 2, not 6.
-      # thats why we're matching for '2' in both parts
-      $osreleasemajor = regsubst($::operatingsystemrelease, '^(\d+)\..*$', '\1') # workaround for the possibly missing operatingsystemmajrelease
-      $agent_restart_command = $osreleasemajor ? {
-        /^(2|5|6)$/ => "/sbin/service ${service_name} reload",
-        '7'       => "/usr/bin/systemctl reload-or-restart ${service_name}",
-        default   => undef,
-      }
-      $unavailable_runmodes = $osreleasemajor ? {
-        /^(2|5|6)$/ => ['systemd.timer'],
-        default   => [],
+    'RedHat' : {
+      if  ($::operatingsystem == 'Amazon')
+      {
+        # Amazon is CentOS 6 based
+        $agent_restart_command = "/sbin/service ${service_name} reload"
+        $unavailable_runmodes = ['systemd.timer']
+      } else {
+        # PSBM is a CentOS 6 based distribution
+        # it reports its $osreleasemajor as 2, not 6.
+        # thats why we're matching for '2' in both parts
+        $osreleasemajor = regsubst($::operatingsystemrelease, '^(\d+)\..*$', '\1') # workaround for the possibly missing operatingsystemmajrelease
+        $agent_restart_command = $osreleasemajor ? {
+          /^(2|5|6)$/ => "/sbin/service ${service_name} reload",
+          '7'       => "/usr/bin/systemctl reload-or-restart ${service_name}",
+          default   => undef,
+        }
+        $unavailable_runmodes = $osreleasemajor ? {
+          /^(2|5|6)$/ => ['systemd.timer'],
+          default   => [],
+        }
       }
     }
     'Windows': {
