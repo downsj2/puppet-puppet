@@ -24,6 +24,8 @@
 #                              file('another_module/autosign.sh') or
 #                              template('another_module/autosign.sh.erb')
 #
+# $autosign_content_template:: If set, process autosign_content through template()
+#
 # $autosign_source::           If set, use this as the source for the autosign file,
 #                              instead of autosign_content.
 #

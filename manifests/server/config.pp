@@ -188,7 +188,11 @@ class puppet::server::config inherits puppet::config {
       if !empty($::puppet::server::autosign_entries) {
         fail('Cannot set both autosign_content/autosign_source and autosign_entries')
       }
-      $autosign_content = $::puppet::server::autosign_content
+      if $::puppet::server::autosign_content_template {
+        $autosign_content = template($::puppet::server::autosign_content)
+      } else {
+        $autosign_content = $::puppet::server::autosign_content
+      }
     } elsif !empty($::puppet::server::autosign_entries) {
       $autosign_content = template('puppet/server/autosign.conf.erb')
     } else {

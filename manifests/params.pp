@@ -169,11 +169,12 @@ class puppet::params {
     $configtimeout = undef
   }
 
-  $autosign         = "${dir}/autosign.conf"
-  $autosign_entries = []
-  $autosign_mode    = '0664'
-  $autosign_content = undef
-  $autosign_source  = undef
+  $autosign                  = "${dir}/autosign.conf"
+  $autosign_entries          = []
+  $autosign_mode             = '0664'
+  $autosign_content          = undef
+  $autosign_content_template = false,
+  $autosign_source           = undef
 
   $puppet_cmd = "${bindir}/puppet"
 
